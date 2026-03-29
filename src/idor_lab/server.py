@@ -1,4 +1,5 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from urllib.parse import urlparse, parse_qs
 
 
 HOST = "127.0.0.1"
@@ -6,19 +7,37 @@ PORT = 8000
 
 
 class LabHandler(BaseHTTPRequestHandler):
-    @route('/')
     def do_GET(self):
         """
-        Suggested routes:
         - `/`
         - `/profile?user=guest`
-        - `/fixed-profile?user=guest`
 
         Build the vulnerable route first, then the fixed route.
         """
-        self.send_response(501)
-        self.end_headers()
-        self.wfile.write(b"TODO: implement routes")
+        parsed_path = urlparse(self.path)
+        match parsed_path.path:
+            case "/":
+                self.send_response(501)
+                self.end_headers()
+                self.wfile.write(b"Provide a valid endpoint")
+            case "/profile":
+                parsed_queries = (parse_qs(parsed_path.query))
+                if (parsed_queries["user"]):
+                    self.send_response(201)
+                    self.end_headers()
+                    text = f"Welcome {parsed_queries["user"][0]}\n"
+                    bytes_text = text.encode()
+                    self.wfile.write(bytes_text)
+                else:
+                    self.send_response(501)
+                    self.end_headers()
+                    self.wfile.write(b"Provide User")
+            case _:
+                self.send_response(501)
+                self.end_headers()
+                self.wfile.write(b"Error")
+
+                    
 
 
 def run():

@@ -12,7 +12,7 @@ You will implement:
 
 ## Suggested Flow
 
-1. Start with a tiny in-memory user store.
+1. Start with a tiny in-memory user store
 2. Add a route that reads a profile identifier from the query string.
 3. Simulate a logged-in user.
 4. Build the vulnerable behavior first.
