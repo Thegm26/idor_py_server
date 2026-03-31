@@ -22,22 +22,20 @@ class LabHandler(BaseHTTPRequestHandler):
                 self.wfile.write(b"Provide a valid endpoint")
             case "/profile":
                 parsed_queries = (parse_qs(parsed_path.query))
-                if (parsed_queries["user"]):
-                    self.send_response(201)
+                if 'user' in parsed_queries:
+                    self.send_response(200)
                     self.end_headers()
-                    text = f"Welcome {parsed_queries["user"][0]}\n"
+                    text = f"Welcome {parsed_queries['user'][0]}\n"
                     bytes_text = text.encode()
                     self.wfile.write(bytes_text)
                 else:
-                    self.send_response(501)
+                    self.send_response(400)
                     self.end_headers()
-                    self.wfile.write(b"Provide User")
+                    self.wfile.write(b"Provide User\n")
             case _:
-                self.send_response(501)
+                self.send_response(400)
                 self.end_headers()
-                self.wfile.write(b"Error")
-
-                    
+                self.wfile.write(b"Error - Path does not exist \n")
 
 
 def run():
